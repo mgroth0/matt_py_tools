@@ -1,3 +1,7 @@
+class Config:
+    def __init__(self):
+        self.Fs = 1
+
 # bandpass filter for eeg data
 def bandpass(data, low, high,cfg):
     nyq = 0.5 * cfg.Fs
