@@ -50,7 +50,7 @@ def p1(P2):
 
 # get the single-sided power spectrum of a window of EEG data
 def ps(data,cfg):
-    prof('fft')
+    # prof('fft')
     Y = fft(data)
     P2 = p2(Y,cfg)
     P1 = p1(P2)
