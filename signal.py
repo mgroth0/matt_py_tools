@@ -1,6 +1,7 @@
 
 
 from scipy.signal import *
+from numpy.fft import *
 
 
 from pathlib import Path
