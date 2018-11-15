@@ -1,7 +1,16 @@
+
+
 from scipy.signal import *
 
-from util import *
 
+from pathlib import Path
+parent = Path(str(__file__)).parent
+# import util
+import importlib.util
+spec = importlib.util.spec_from_file_location("util", str(parent) + "/util.py")
+util = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(util)
+# foo.MyClass()
 
 class Config:
     def __init__(self):

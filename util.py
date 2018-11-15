@@ -3,7 +3,6 @@ import os
 import time
 
 import threading
-import vars
 import time
 from os import system
 
