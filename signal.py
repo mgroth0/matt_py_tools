@@ -37,7 +37,7 @@ def bandstop(data, f, w,cfg):
 
 # calculate the single-sided power spectrum from the two-sided power spectrum
 def p1(P2):
-    prof('p1')
+    # prof('p1')
     p1 = []
     i = 0
     for p in P2:
@@ -74,5 +74,5 @@ def p1_freqs(L, Fs):
 
 # two-sided fft power spectrum for eeg data
 def p2(Y,cfg):
-    prof('p2')
+    # prof('p2')
     return abs(Y / cfg.FFT_WIN)
