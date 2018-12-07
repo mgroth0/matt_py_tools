@@ -1,7 +1,6 @@
 from tkinter import messagebox
 
 from mjlib.util import say,micros,append,appendln
-import arduino
 from time import sleep
 from mjlib.config import Config
 
