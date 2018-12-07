@@ -13,6 +13,9 @@ util = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(util)
 # foo.MyClass()
 
+
+fft_win = []
+
 class Config:
     def __init__(self):
         self.Fs = 1
@@ -79,3 +82,5 @@ def p1_freqs(L, Fs):
 def p2(Y,cfg):
     # prof('p2')
     return abs(Y / cfg.FFT_WIN)
+
+
