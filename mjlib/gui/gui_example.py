@@ -7,11 +7,12 @@ import time
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from numpy import *
-from pynput.mouse import Controller
 from scipy.io import *
-
+from mjlib.gui.tk_util import *
 import mjlib.util as util
 from mjlib import lang
+import os
+from matplotlib import pyplot as plt
 
 
 class AppWindow(tk.Tk):
@@ -24,33 +25,8 @@ class AppWindow(tk.Tk):
         self.raw_win = np.zeros((self.RAW_WIN, 8))
         self.RAW_WIN_X = range(self.RAW_WIN)
 
-        print('initializing app window')
-        self.initialize()
-        print('initialized app window')
-
-        # for macbook display
-        # self.wm_geometry("1200x750+0+0")  # only size matters here since we
-
-        self.wm_geometry("1500x925+0+0")  # only size matters here since we center after
-        self.center()  # move to good spot on monitor
-
-        x = 300
-        y = 0
-
-        self.y = []
-
-    def center(self):
-        self.update_idletasks()
-        width = self.winfo_width()
-        height = self.winfo_height()
-        x = (self.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.winfo_screenheight() // 2) - (height // 2)
-        self.geometry('{}x{}+{}+{}'.format(width, height, x, y))
-
-    def initialize(self):
-
         Fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100)
-        self.FigSubPlot = Fig.add_subplot(111)
+        self.FigSubPlot = plt.plot()
         self.FigSubPlot.axes.get_xaxis().set_visible(False)
         x = []
         y = []
@@ -188,17 +164,6 @@ class AppWindow(tk.Tk):
                        command=self.on_change_plot).grid(row=r, column=2)
         v_shake = tk.IntVar()
 
-        self.mouse = Controller()
-        keep_moving_mouse = False
-        done_moving_mouse = True
-
-        def on_change_shake(a, b, c):
-            if v_shake.get():
-                self.keep_moving_mouse = True
-                util.daemon(self.mouse_mover)
-            else:
-                self.keep_moving_mouse = False
-
         v_shake.trace_variable(mode="w", callback=on_change_shake)
         tk.Checkbutton(self, text="shake", onvalue=1, offvalue=0, variable=v_shake).grid(row=r, column=3)
 
@@ -244,50 +209,9 @@ class AppWindow(tk.Tk):
         self.v_loops = tk.StringVar()
         tk.Spinbox(self, width=5, from_=1, to_=5, textvariable=self.v_loops).grid(row=r, column=12)
 
-        def on_collect():
-            pass
-
         tk.Button(self, text="collect", command=on_collect).grid(row=r, column=13),
         r = r + 1
         tk.Label(self, text="Test:").grid(row=r, column=0)
-
-        def on_quick_check():
-            eeg = loadmat('/Users/matt/Desktop/registered/todo/eeg_analysis_pipeline/quick_data.mat')
-            eeg = eeg['eeg']
-            old_eeg = eeg
-            eeg = []
-            for e in old_eeg:
-                eeg.append(e[0])
-
-            def get_eeg():
-                l = len(eeg)
-                for i, e in enumerate(eeg):
-                    print('quick eeg in (' + str(i) + '/' + str(l) + ')')
-                    data_in(e, cfg)
-
-            util.daemon(get_eeg)
-
-        tk.Button(self, text="quick check", command=on_quick_check).grid(row=r, column=1, columnspan=2),
-        r = r + 1
-        tk.Label(self, text="NFB:").grid(row=r, column=0)
-        v_nfb = tk.IntVar()
-        tk.Radiobutton(self, text="delta", variable=v_nfb, value=1).grid(row=r, column=1)
-        tk.Radiobutton(self, text="theta", variable=v_nfb, value=2).grid(row=r, column=2)
-        tk.Radiobutton(self, text="alpha/mu", variable=v_nfb, value=3).grid(row=r, column=3)
-        tk.Radiobutton(self, text="beta", variable=v_nfb, value=4).grid(row=r, column=4)
-        tk.Radiobutton(self, text="gamma", variable=v_nfb, value=5).grid(row=r, column=5)
-        self.v_threshold = tk.StringVar()
-        tk.Label(self, text="threshold:").grid(row=r, column=6)
-        entry = tk.Entry(self, textvariable=self.v_threshold, width=10)
-        entry.grid(row=r, column=7)
-        self.v_positive = tk.IntVar()
-        tk.Checkbutton(self, text="positive", onvalue=1, offvalue=0, variable=self.v_positive).grid(row=r, column=8)
-        r = r + 1
-        tk.Button(self, text="Load Config", command=self.on_load_cfg).grid(row=r, column=0)
-        tk.Button(self, text="Save Config", command=self.on_save_cfg).grid(row=r, column=1, columnspan=2)
-        r = r + 1
-        tk.Label(self, text="Debug:").grid(row=r, column=0)
-        tk.Button(self, text="Profile", command=self.on_click_profile).grid(row=r, column=1)
 
         r = r + 1
 
@@ -305,49 +229,39 @@ class AppWindow(tk.Tk):
         self.fig_x = []
         self.fig_y = [[], [], [], [], [], [], [], []]  # each channel
 
+        # for macbook display
+        # self.wm_geometry("1200x750+0+0")  # only size matters here since we
+
+        self.wm_geometry("1500x925+0+0")  # only size matters here since we center after
+        self.center()  # move to good spot on monitor
+
+        self.y = []
+
+
+
+
+
+
+
     def animate(self):
-        try:
-            time.sleep(0.05)
-            for c in range(len(self.fig_y)):
-                l = len(self.fig_y[c])
-                if l > 0:
-                    self.lines[c].set_data(self.fig_x, self.fig_y[c])
-            if self.reset_x:
-                if len(self.fig_x) > 0:
-                    self.canvas.figure.axes[0].set_xlim(min(self.fig_x), max(self.fig_x))
-                    self.reset_x = False
+        time.sleep(0.05)
+        for c in range(len(self.fig_y)):
+            l = len(self.fig_y[c])
+            if l > 0:
+                self.lines[c].set_data(self.fig_x, self.fig_y[c])
+        if self.reset_x:
+            if len(self.fig_x) > 0:
+                self.canvas.figure.axes[0].set_xlim(min(self.fig_x), max(self.fig_x))
+                self.reset_x = False
 
-            if self.winner is 1:
-                self.stim_feedback_canv.itemconfigure(self.circ_2, fill="white")
-                self.stim_feedback_canv.itemconfigure(self.circ_1, fill="yellow")
-            elif self.winner is 2:
-                self.stim_feedback_canv.itemconfigure(self.circ_2, fill="yellow")
-                self.stim_feedback_canv.itemconfigure(self.circ_1, fill="white")
+        if self.winner is 1:
+            self.stim_feedback_canv.itemconfigure(self.circ_2, fill="white")
+            self.stim_feedback_canv.itemconfigure(self.circ_1, fill="yellow")
+        elif self.winner is 2:
+            self.stim_feedback_canv.itemconfigure(self.circ_2, fill="yellow")
+            self.stim_feedback_canv.itemconfigure(self.circ_1, fill="white")
 
-            self.canvas.draw()
-            self.after(50, self.animate)
-        except KeyboardInterrupt as e:
-            print('exiting from KeyboardInterrupt')
-            sys.exit(0)
-
-    def on_save_cfg(self):
-        file = filedialog.asksaveasfilename(
-            initialdir=os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir, os.pardir, 'configs')),
-            filetypes=(("json files", "*.json"),), title="Select where to save config file")
-        if not ".json" in str(file):
-            file = str(file) + ".json"
-        j = cfg.to_json()
-        with open(file, "w") as myfile:
-            myfile.write(j)
-
-    def on_load_cfg(self):
-        file = filedialog.askopenfilename(
-            initialdir=os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir, os.pardir, 'configs')),
-            filetypes=(("json files", "*.json"),), title="Select config file to load")
-
-        with open(file) as f:
-            j = f.readlines()
-        config.cfg = config.JsonObject(j)
+        self.canvas.draw()
 
     def data_in(self, e):
 
@@ -422,19 +336,3 @@ class AppWindow(tk.Tk):
             self.FigSubPlot.axes.set_xlim(0, int(v_xmax.get()))
         except ValueError:
             pass
-
-    def on_click_profile(self):
-
-        vars.is_profiling = True
-        print('self.is_profiling =', str(vars.is_profiling))
-
-    def mouse_mover():
-        l = True
-        while keep_moving_mouse:
-            time.sleep(.01)
-            if l:
-                mouse.move(0, -1)
-            else:
-                mouse.move(0, 1)
-            l = not l
-        done_moving_mouse = False

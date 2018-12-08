@@ -23,7 +23,7 @@ class TkApp(ABC):
 
         self.start()
 
-        root.after(0, root.animate())
+        root.after(0, _animate(root))
 
         self._enter_event_loop(root)
 
@@ -38,6 +38,14 @@ class TkApp(ABC):
     @abstractmethod
     def animate(self):
         pass
+
+    def _animate(self,root):
+        try:
+            self.animate()
+            root.after(50, self._animate(root))
+        except KeyboardInterrupt as e:
+            print('exiting from KeyboardInterrupt')
+            sys.exit(0)
 
     def _enter_event_loop(self, root):
         try:

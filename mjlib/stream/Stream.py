@@ -8,6 +8,8 @@ class Stream(ABC):
     def run(self):
         while True:
             sample = self._get_sample()
+            if sample is None:
+                break
             self._send(sample)
 
     @abstractmethod
