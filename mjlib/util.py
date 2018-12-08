@@ -12,6 +12,9 @@ if os.name == 'nt':
     import pythoncom
 
 
+def pythonpath():
+    return os.environ['PYTHONPATH']
+
 def println(s):
     print(s)
 
@@ -110,5 +113,20 @@ def say(s):
 
 def micros():
     return time.time() * 1000
+
+
+def lines(f):
+    with open(f, 'r') as tsvin:
+        l = 0
+        last = 0
+        tsvr = csv.reader(tsvin, delimiter=',')
+        for i in tsvr:
+            l = l + 1
+        last = l - 1
+        return l
+
+
+def last_line_n(f):
+    return lines(f) - 1
 
 

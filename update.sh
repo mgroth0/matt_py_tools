@@ -1,15 +1,22 @@
-from distutils.core import setup
+ version="0.1.1"
+ url="https://github.com/mgroth0/matt_py_tools/releases/tag/"$version
+ git add .
+ git commit -m "update"
+ git push
+ hub release create -h
+
+ echo """from distutils.core import setup
 
 setup(
     name='mjlib',  # How you named your package folder (MyLib)
     packages=['mjlib'],  # Chose the same as "name"
-    version='0.1.1',  # Start with a small number and increase it with every change you make
+    version='"""version"""',  # Start with a small number and increase it with every change you make
     license='MIT',  # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     description='Matt\'s General Python Library',  # Give a short description about your library
     author='Matt Groth',  # Type in your name
     author_email='mgroth49@gmail.com',  # Type in your E-Mail
     url='https://github.com/mgroth0/matt_py_tools',  # Provide either the link to your github or to your website
-    download_url='https://github.com/mgroth0/matt_py_tools/releases/tag/0.1.1',  # I explain this later on
+    download_url='"""$url"""',  # I explain this later on
     keywords=['matt', 'james', 'groth', 'library'],  # Keywords that define your package best
     install_requires=[  # I get to this in a second
         'matplotlib',
@@ -27,3 +34,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
 )
+""" >> fileName
+python setup.py sdist
+twine upload dist/*
+/Users/matt/Desktop/registered/NAP_code/venv/bin/pip install YOURPACKAGE --upgrade
