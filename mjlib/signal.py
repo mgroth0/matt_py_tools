@@ -16,8 +16,8 @@ spec.loader.exec_module(util)
 
 fft_win = []
 # should be multiple of sample rate
-FFT_WIN = self.Fs * 5
-FFT_OVERLAP = 64
+# FFT_WIN = self.Fs * 5
+# FFT_OVERLAP = 64
 
 class Config:
     def __init__(self):

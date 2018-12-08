@@ -1,1 +1,0 @@
-from mjlib.gui.TKApp import TkApp

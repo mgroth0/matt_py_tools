@@ -1,16 +1,17 @@
 import tkinter as tk
 from tkinter import N, S, E, W, filedialog
+
 import matplotlib
+import numpy as np
 import time
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from numpy import *
 from pynput.mouse import Controller
 from scipy.io import *
+
 import mjlib.util as util
 from mjlib import lang
-from mjlib.gui.TkApp import TkApp
-import numpy as np
 
 
 class AppWindow(tk.Tk):
