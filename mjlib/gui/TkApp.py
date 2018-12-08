@@ -35,7 +35,6 @@ class TkApp(ABC):
     def on_quit(self):
         pass
 
-
     @abstractmethod
     def animate(self):
         pass
