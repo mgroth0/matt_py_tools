@@ -10,7 +10,8 @@ from scipy.io import *
 import mjlib.util as util
 from mjlib import lang
 from mjlib.gui.TkApp import TkApp
-import  numpy as np
+import numpy as np
+
 
 class AppWindow(tk.Tk):
     def __init__(self, parent, data_inputs, collect_script):
@@ -443,19 +444,3 @@ class AppWindow(tk.Tk):
                 mouse.move(0, 1)
             l = not l
         done_moving_mouse = False
-
-
-class TestApp(TkApp):
-    def start(self):
-        pass
-
-    def animate(self):
-        pass
-
-    def on_quit(self):
-        pass
-
-
-if __name__ == '__main__':
-    root = AppWindow(None, [], None)
-    TestApp(root)
