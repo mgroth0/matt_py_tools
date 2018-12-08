@@ -14,12 +14,8 @@ import numpy as np
 
 
 class AppWindow(tk.Tk):
-    def __init__(self, parent, data_inputs, collect_script):
-        tk.Tk.__init__(self, parent)
-        self.parent = parent
-        self.data_inputs = data_inputs
-
-        self.collect_script = collect_script
+    def __init__(self):
+        tk.Tk.__init__(self, None)
 
         self.stream = False
         self.done_streaming = True
@@ -248,7 +244,7 @@ class AppWindow(tk.Tk):
         tk.Spinbox(self, width=5, from_=1, to_=5, textvariable=self.v_loops).grid(row=r, column=12)
 
         def on_collect():
-            self.collect_script(self)
+            pass
 
         tk.Button(self, text="collect", command=on_collect).grid(row=r, column=13),
         r = r + 1
@@ -361,9 +357,6 @@ class AppWindow(tk.Tk):
             self.raw_win[:, c] = temp_c_win
             self.fig_x = self.RAW_WIN_X
             self.fig_y[c] = temp_c_win
-
-        for inp in self.data_inputs:
-            inp(e)
 
     def on_switch_source(self):
         print("switched source: " + str(self.v_source.get()))
