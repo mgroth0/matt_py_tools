@@ -1,34 +1,22 @@
+import tkinter as tk
+from tkinter import N, S, E, W, filedialog
 import matplotlib
 import time
-import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from numpy import *
-import numpy as np
 from pynput.mouse import Controller
 from scipy.io import *
-from tkinter import N, S, E, W, filedialog
-import sys
-import warnings
-
-import mjlib.config as config
-import mjlib.listen_lsl
 import mjlib.util as util
-# from matt_tools.exp import run_experiment
-from mjlib.listen_sine import stream_sine
-from mjlib.listen_udp import udp_socket
+from mjlib import lang
+from mjlib.gui.TkApp import TkApp
+import  numpy as np
 
-main_win = None
-
-
-# main class for GUI, controls, and live plot
 class AppWindow(tk.Tk):
-    def __init__(self, parent, cfg, data_inputs,collect_script):
+    def __init__(self, parent, data_inputs, collect_script):
         tk.Tk.__init__(self, parent)
         self.parent = parent
         self.data_inputs = data_inputs
-
-        self.cfg = cfg
 
         self.collect_script = collect_script
 
@@ -43,11 +31,10 @@ class AppWindow(tk.Tk):
         print('initialized app window')
 
         # for macbook display
-        self.wm_geometry("1200x750+0+0")  # only size matters here since we
+        # self.wm_geometry("1200x750+0+0")  # only size matters here since we
 
-        if self.cfg.TRIPLE_DISPLAY:
-            self.wm_geometry("800x925+0+0")  # only size matters here since we center after
-            self.center()  # move to good spot on monitor
+        self.wm_geometry("1500x925+0+0")  # only size matters here since we center after
+        self.center()  # move to good spot on monitor
 
         x = 300
         y = 0
@@ -149,8 +136,16 @@ class AppWindow(tk.Tk):
         tk.Checkbutton(self, text="4", onvalue=1, offvalue=0, variable=self.v_channel_4_on).grid(row=r, column=4)
         self.channel_5_box = tk.Checkbutton(self, text="5", onvalue=1, offvalue=0, variable=self.v_channel_5_on)
         self.channel_5_box.grid(row=r, column=5)
-        self.channel_6_box = tk.Checkbutton(self, text="6", onvalue=1, offvalue=0, variable=self.v_channel_6_on)
+
+        self.channel_6_box = tk.Checkbutton(
+            self,
+            text="6",
+            onvalue=1,
+            offvalue=0,
+            variable=self.v_channel_6_on
+        )
         self.channel_6_box.grid(row=r, column=6)
+
         self.channel_7_box = tk.Checkbutton(self, text="7", onvalue=1, offvalue=0, variable=self.v_channel_7_on)
         self.channel_7_box.grid(row=r, column=7)
         self.channel_8_box = tk.Checkbutton(self, text="8", onvalue=1, offvalue=0, variable=self.v_channel_8_on)
@@ -188,10 +183,10 @@ class AppWindow(tk.Tk):
         self.line1 = None
         self.line2 = None
 
-        tk.Radiobutton(self, text="raw", variable=self.v_plot, value=config.RAW, command=self.on_change_plot).grid(
+        tk.Radiobutton(self, text="raw", variable=self.v_plot, value=lang.RAW, command=self.on_change_plot).grid(
             row=r,
             column=1)
-        tk.Radiobutton(self, text="transformed", variable=self.v_plot, value=config.TRANSFORMED,
+        tk.Radiobutton(self, text="transformed", variable=self.v_plot, value=lang.TRANSFORMED,
                        command=self.on_change_plot).grid(row=r, column=2)
         v_shake = tk.IntVar()
 
@@ -209,7 +204,6 @@ class AppWindow(tk.Tk):
         v_shake.trace_variable(mode="w", callback=on_change_shake)
         tk.Checkbutton(self, text="shake", onvalue=1, offvalue=0, variable=v_shake).grid(row=r, column=3)
 
-
         self.v_ymax.trace_variable(mode="w", callback=self.on_change_ymax)
         self.v_ymin.trace_variable(mode="w", callback=self.on_change_ymax)
 
@@ -222,7 +216,6 @@ class AppWindow(tk.Tk):
         entry = tk.Entry(self, textvariable=self.v_ymax, width=10)
         entry.grid(row=r, column=7)
         self.v_ymax.set("100")
-
 
         tk.Label(self, text="xmax:").grid(row=r, column=8)
 
@@ -254,7 +247,7 @@ class AppWindow(tk.Tk):
         tk.Spinbox(self, width=5, from_=1, to_=5, textvariable=self.v_loops).grid(row=r, column=12)
 
         def on_collect():
-           self.collect_script(self)
+            self.collect_script(self)
 
         tk.Button(self, text="collect", command=on_collect).grid(row=r, column=13),
         r = r + 1
@@ -356,17 +349,11 @@ class AppWindow(tk.Tk):
 
         with open(file) as f:
             j = f.readlines()
-        config.cfg = config.Config(j)
+        config.cfg = config.JsonObject(j)
 
-    def data_in(self, e, cfg, c=0):
+    def data_in(self, e):
 
-        util.prof('eeg_in')
-
-        # print('not plotting...?')
-        # print('cfg.plot5:' + str(cfg.plot))
-        # print('self.stream:' + str(self.stream))
         if cfg.plot is config.RAW and self.stream:
-            # print('updating chart?: ' + str(e))
             temp_c_win = list(self.raw_win[:, c])
             del temp_c_win[0]
             temp_c_win.append(e)
@@ -375,7 +362,7 @@ class AppWindow(tk.Tk):
             self.fig_y[c] = temp_c_win
 
         for inp in self.data_inputs:
-            inp(e, self, cfg, c)
+            inp(e)
 
     def on_switch_source(self):
         print("switched source: " + str(self.v_source.get()))
@@ -398,12 +385,12 @@ class AppWindow(tk.Tk):
             elif self.v_source.get() is 6:
                 cfg.Fs = cfg.ENOBIO_Fs
             print("switching to source: udp")
-            global main_win
+            global root
             if self.v_network.get() == "UDP":
-                util.daemon(udp_socket, args=(main_win, cfg))
+                util.daemon(udp_socket, args=(root, cfg))
             elif self.v_network.get() == "LSL":
                 print('starting listen_lsl thread')
-                util.daemon(listen_lsl.listen_lsl, args=(main_win, cfg))
+                util.daemon(listen_lsl.listen_lsl, args=(root, cfg))
             else:
                 print("Pick a network type to stream live data!")
         print("done switching source")
@@ -427,14 +414,13 @@ class AppWindow(tk.Tk):
 
     def on_change_ymax(self, a, b, c):
         try:
-            if self.v_plot.get() is config.TRANSFORMED:
+            if self.v_plot.get() is lang.TRANSFORMED:
                 self.FigSubPlot.axes.set_ylim(int(self.v_ymin.get()), int(self.v_ymax.get()))
 
             else:
                 self.FigSubPlot.axes.set_ylim(int(self.v_ymin.get()), int(self.v_ymax.get()))
         except ValueError:
             pass
-
 
     def on_change_xmax(self, a, b, c):
         try:
@@ -459,60 +445,17 @@ class AppWindow(tk.Tk):
         done_moving_mouse = False
 
 
-def start_app(main_win,title, cfg,test_plot=True):
+class TestApp(TkApp):
+    def start(self):
+        pass
 
-    try:
+    def animate(self):
+        pass
 
-        # print('cfg.plot2:' + str(cfg.plot))
-        print('updating app win')
-        main_win.update()
+    def on_quit(self):
+        pass
 
-        # main_win.lift()
-        main_win.call('wm', 'attributes', '.', '-topmost', '1')
 
-        print('putting title on app window')
-        main_win.wm_title(title)
-        print('created app window and put title')
-
-        # https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-event-in-tkinter
-        def on_closing():
-            main_win.destroy()
-            sys.exit(0)
-
-        main_win.protocol("WM_DELETE_WINDOW", on_closing)
-
-        main_win.after(0, main_win.animate())
-
-        def test():
-
-            main_win.stream = True
-            cfg.plot = config.RAW
-            main_win.v_source.set(4)
-            main_win.v_plot.set(1)
-            main_win.v_ymax.set(10)
-            main_win.on_change_plot()
-            # print('cfg.plot4:' + str(cfg.plot))
-            util.daemon(stream_sine, args=(main_win, cfg))
-            print('here, should be testing...')
-        # print('cfg.plot3:' + str(cfg.plot))
-        if test_plot:
-            util.daemon(test)
-
-        # https://stackoverflow.com/questions/16995969/inertial-scrolling-in-mac-os-x-with-tkinter-and-python
-        while True:
-            try:
-                # prevent: RuntimeWarning: internal gelsd driver lwork query error, required iwork dimension not returned. This is likely the result of LAPACK bug 0038, fixed in LAPACK 3.2.2 (released July 21, 2010). Falling back to 'gelss' driver.
-                with warnings.catch_warnings():
-                    warnings.simplefilter("ignore")
-                    main_win.mainloop()
-                break
-            except UnicodeDecodeError:
-                pass
-            except SystemExit as e:
-                if not main_win: # no idea if this works
-                    main_win.destroy()
-                sys.exit(e.code)
-        return main_win
-    except KeyboardInterrupt as e:
-        print('exiting from ' + str(e))
-        sys.exit(0)
+if __name__ == '__main__':
+    root = AppWindow(None, [], None)
+    TestApp(root)
