@@ -10,10 +10,9 @@ class TkBuilder(ABC):
         l = tk.Label(self.widget, text=text)
         return self.layout(l)
 
-    def Button(self,text="button text",command=lambda: None):
-        b = tk.Button(self.widget,text=text,command=command)
+    def Button(self, text="button text", command=lambda: None):
+        b = tk.Button(self.widget, text=text, command=command)
         return self.layout(b)
-
 
     def RadioButton(self, text="radio button text", prop=None):
         rb = tk.Radiobutton(self.widget, text=text, variable=prop, value=text)
@@ -32,22 +31,22 @@ class TkBuilder(ABC):
         s.set(initial)
         return self.layout(s)
 
-    def Entry(self, textvar=None,callback=None):
-        v = textvar.get()
+    def Entry(self, textvar=None, callback=None):
+        if textvar is not None:
+            v = textvar.get()
         e = tk.Entry(self.widget, textvariable=textvar, width=10)
-        textvar.set(v)
+        if textvar is not None:
+            textvar.set(v)
         return self.layout(e)
 
-    def SpinBox(self, prop = None,callback=None, min=1, max=10):
-        s = tk.Spinbox(self.widget, textvariable = prop, from_=min, to_=max, width=5,callback=None)
+    def SpinBox(self, prop=None, callback=None, min=1, max=10):
+        s = tk.Spinbox(self.widget, textvariable=prop, from_=min, to_=max, width=5, callback=None)
         return self.layout(s)
 
-
-    def canv(self,width=130,height=200,bg="white"):
-        canv = tk.Canvas(self.widget,width=width,height=height,bg=bg)
+    def canv(self, width=130, height=200, bg="white"):
+        canv = tk.Canvas(self.widget, width=width, height=height, bg=bg)
         return self.layout(canv)
         # canv.grid(row=0, column=9, sticky=W + N + S + E, columnspan=2)
-
 
     def _layout(self, widget):
         layout(widget)
