@@ -13,10 +13,10 @@ mjlib.egg-info/SOURCES.txt
 mjlib.egg-info/dependency_links.txt
 mjlib.egg-info/requires.txt
 mjlib.egg-info/top_level.txt
+mjlib/gui/GridBuilder.py
 mjlib/gui/TkApp.py
 mjlib/gui/__init__.py
 mjlib/gui/binding.py
-mjlib/gui/gui_example.py
 mjlib/gui/tk_util.py
 mjlib/stream/LSLStream.py
 mjlib/stream/LivePlot.py

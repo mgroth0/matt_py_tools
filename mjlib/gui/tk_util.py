@@ -1,7 +1,29 @@
 from tkinter import messagebox
 import time
 from pynput.mouse import Controller
+import tkinter as tk
+from tkinter import N, S, E, W, filedialog
 
+def window_bounds(win,w,h,x,y):
+    win.wm_geometry("%dx%d+%d+%d"%(w,h,x,y))
+
+def canv(root):
+    canv = tk.Canvas(root, width=130, height=200, bg="white")
+    canv.grid(row=0, column=9, sticky=W + N + S + E, columnspan=2)
+    return canv
+
+def circle(canv):
+    # IF I DO
+    # self.stim_feedback_canv.itemconfigure(self.circ_2, fill="white")
+    # I NEED TO: self.canvas.draw()
+    return canv.create_oval(20, 70, 120, 170).
+
+
+def text(canv):
+    return canv.create_text(70, 120, text="28Hz")
+
+def line(canv):
+    return canv.create_line(0, 25, 2000, 25)
 
 def alert(title, message):
     return messagebox.askokcancel(title, message)
@@ -13,6 +35,12 @@ def alert(title, message):
  # file = filedialog.asksaveasfilename(
  #     initialdir=os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir, os.pardir, 'configs')),
  #     filetypes=(("json files", "*.json"),), title="Select where to save config file")
+
+
+
+# self.line2 = self.FigSubPlot.axes.axvline(x=config.cfg.FREQ2, linewidth=2, color='grey')
+#         elif self.line1 is not None:
+#             self.FigSubPlot.axes.lines.remove(self.line1)
 
 def center(window):
     window.update_idletasks()

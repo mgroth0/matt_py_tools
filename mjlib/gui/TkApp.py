@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import sys
 import warnings
+from time import sleep
 
 
 class TkApp(ABC):
@@ -20,6 +21,8 @@ class TkApp(ABC):
             sys.exit(0)
 
         root.protocol("WM_DELETE_WINDOW", on_closing)
+
+        self.live_plots = []
 
         self.start()
 
@@ -41,6 +44,9 @@ class TkApp(ABC):
 
     def _animate(self,root):
         try:
+            sleep(0.05)
+            for lp in live_plots:
+                lp.animate()
             self.animate()
             root.after(50, self._animate(root))
         except KeyboardInterrupt as e:

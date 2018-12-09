@@ -31,6 +31,7 @@ class Stream(ABC):
         self.disconnect(other)
         return self
 
+
     def _send(self, sample):
         for l in self._listeners:
             l(sample)
