@@ -40,7 +40,7 @@ class TkBuilder(ABC):
             def proto_callback(a,b,c):
                 callback(a)
             textvar.trace(mode='w', callback=proto_callback)
-        e = tk.Entry(self.widget, textvariable=textvar, width=10,callback=callback)
+        e = tk.Entry(self.widget, textvariable=textvar, width=10)
         if textvar is not None:
             textvar.set(v)
         return self.layout(e)
