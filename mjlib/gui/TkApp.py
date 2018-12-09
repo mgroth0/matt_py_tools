@@ -23,7 +23,7 @@ class TkApp(ABC):
         self.live_plots = []
 
         self.start()
-        root.after(0, self._animate, (root,))
+        root.after(0, self._animate, root)
         self._enter_event_loop(root)
 
     @abstractmethod
@@ -44,7 +44,7 @@ class TkApp(ABC):
             for lp in self.live_plots:
                 lp.animate()
             self.animate()
-            root.after(50, self._animate(root))
+            root.after(50, self._animate,root)
         except KeyboardInterrupt as e:
             print('exiting from KeyboardInterrupt')
             sys.exit(0)
