@@ -26,7 +26,7 @@ class TkApp(ABC):
 
         self.start()
 
-        root.after(0, _animate(root))
+        root.after(0, self._animate(root))
 
         self._enter_event_loop(root)
 

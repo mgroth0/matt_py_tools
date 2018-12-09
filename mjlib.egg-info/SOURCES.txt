@@ -20,7 +20,6 @@ mjlib/gui/__init__.py
 mjlib/gui/binding.py
 mjlib/gui/tk_util.py
 mjlib/stream/LSLStream.py
-mjlib/stream/LivePlot.py
 mjlib/stream/SineStream.py
 mjlib/stream/Stream.py
 mjlib/stream/UDPStream.py
