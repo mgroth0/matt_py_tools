@@ -12,6 +12,7 @@ class GridBuilder(TkBuilder):
         self._maxCol = 0
         self.orientation = tk.RIGHT
         self.columnspan = 1  # default tkinter value
+        self.hold = False
 
     def layout(self, widget):
         widget.grid(row=self.row, column=self.col)
@@ -19,8 +20,9 @@ class GridBuilder(TkBuilder):
         return widget
 
     def nextRow(self):
-        self.row += 1
-        self.col = 0
+        if not self.hold:
+            self.row += 1
+            self.col = 0
 
     def evenOut(self):
         for i in range(self._maxCol + 1):
@@ -32,9 +34,10 @@ class GridBuilder(TkBuilder):
         self.columnspan = 1
 
     def _move(self):
-        if self.orientation is tk.RIGHT:
-            self.col += 1
-        else:
-            self.row += 1
-        self._maxCol = max(self.col, self._maxCol)
-        self._maxRow = max(self.row, self._maxRow)
+        if not self.hold:
+            if self.orientation is tk.RIGHT:
+                self.col += 1
+            else:
+                self.row += 1
+            self._maxCol = max(self.col, self._maxCol)
+            self._maxRow = max(self.row, self._maxRow)
