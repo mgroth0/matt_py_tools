@@ -36,8 +36,9 @@ class TkBuilder(ABC):
         if textvar is not None:
             v = textvar.get()
         else:
-            textvar = tk.StringVar()
+            textvar = tk.StringVar(self.widget)
         if callback is not None:
+
             def proto_callback(a,b,c):
                 callback(a)
             textvar.trace(mode='w', callback=proto_callback)
