@@ -7,7 +7,7 @@ class TkBuilder(ABC):
         self.widget = widget
 
     def Label(self, text="label text"):
-        l = tk.Label(self.widget, text)
+        l = tk.Label(self.widget, text=text)
         return self.layout(l)
 
     def Button(self,text="button text",command=lambda: None):
