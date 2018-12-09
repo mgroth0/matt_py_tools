@@ -15,6 +15,8 @@ class GridBuilder(TkBuilder):
 
     def layout(self, widget):
         widget.grid(row=self.row, column=self.col)
+        widget.pack()
+        self.widget.pack()
         self._move()
 
     def nextRow(self):
