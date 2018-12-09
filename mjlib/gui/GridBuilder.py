@@ -13,10 +13,11 @@ class GridBuilder(TkBuilder):
         self.orientation = tk.RIGHT
         self.columnspan = 1  # default tkinter value
         self.rowspan = 1  # default tkinter value
+        self.sticky = ""
         self.hold = False
 
     def layout(self, widget):
-        widget.grid(row=self.row, column=self.col,columnspan=self.columnspan,rowspan=self.rowspan)
+        widget.grid(row=self.row, column=self.col, columnspan=self.columnspan, rowspan=self.rowspan, sticky=self.sticky)
         self._move()
         return widget
 
@@ -34,6 +35,7 @@ class GridBuilder(TkBuilder):
     def resetExtraOptions(self):
         self.columnspan = 1
         self.rowspan = 1
+        self.sticky = ""
 
     def _move(self):
         if not self.hold:
