@@ -32,6 +32,7 @@ class TkBuilder(ABC):
         return self.layout(s)
 
     def Entry(self, textvar=None, callback=None):
+        v = None
         if textvar is not None:
             v = textvar.get()
         else:
@@ -41,7 +42,7 @@ class TkBuilder(ABC):
                 callback(a)
             textvar.trace(mode='w', callback=proto_callback)
         e = tk.Entry(self.widget, textvariable=textvar, width=10)
-        if textvar is not None:
+        if textvar is not None and v is not None:
             textvar.set(v)
         return self.layout(e)
 
