@@ -7,16 +7,12 @@ from tkinter import N, S, E, W, filedialog
 def window_bounds(win,w,h,x,y):
     win.wm_geometry("%dx%d+%d+%d"%(w,h,x,y))
 
-def canv(root):
-    canv = tk.Canvas(root, width=130, height=200, bg="white")
-    canv.grid(row=0, column=9, sticky=W + N + S + E, columnspan=2)
-    return canv
 
 def circle(canv):
     # IF I DO
     # self.stim_feedback_canv.itemconfigure(self.circ_2, fill="white")
     # I NEED TO: self.canvas.draw()
-    return canv.create_oval(20, 70, 120, 170).
+    return canv.create_oval(20, 70, 120, 170)
 
 
 def text(canv):
