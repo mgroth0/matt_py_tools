@@ -7,7 +7,6 @@ from time import sleep
 class TkApp(ABC):
 
     def __init__(self, root, topmost=False):
-        print('here1')
         root.update()
 
         if topmost:
@@ -19,17 +18,13 @@ class TkApp(ABC):
             self.on_quit()
             root.destroy()
             sys.exit(0)
-        print('here5')
         root.protocol("WM_DELETE_WINDOW", on_closing)
 
         self.live_plots = []
 
         self.start()
-        print('herea')
-        root.after(0, self._animate(root))
-        print('hereb')
+        root.after(0, self._animate, (root,))
         self._enter_event_loop(root)
-        print('herec')
 
     @abstractmethod
     def start(self):
@@ -44,7 +39,6 @@ class TkApp(ABC):
         pass
 
     def _animate(self,root):
-        print('here10')
         try:
             sleep(0.05)
             for lp in self.live_plots:
