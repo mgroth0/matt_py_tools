@@ -23,10 +23,10 @@ class TkBuilder(ABC):
     def OptionMenu(self, *options, name=None,prop=None, initial=None):
         if name is not None:
             fram = ttk.Frame(self.widget)
-            om = ttk.OptionMenu(fram, prop,initial, *options)
+            om = ttk.OptionMenu(fram, prop,initial, style='matt.TMenubutton', *options)
             return self._with_label(name,fram,om)
         else:
-            om = ttk.OptionMenu(self.widget, prop,initial, *options)
+            om = ttk.OptionMenu(self.widget, prop,initial, style='matt.TMenubutton',*options)
             return self.layout(om)
 
     def CheckBox(self, text="checkbox text", prop=None):
@@ -50,7 +50,7 @@ class TkBuilder(ABC):
 
             textvar.trace(mode='w', callback=proto_callback)
 
-        kwargs = {'textvariable': textvar, 'width': 10}
+        kwargs = {'textvariable': textvar, 'width': 10,'style':'matt.TEntry'}
 
         if initial is not None:
             textvar.set(initial)

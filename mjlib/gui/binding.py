@@ -13,6 +13,11 @@ class Prop:
     def set(self, value):
         self._var.set(value)
 
+    def on_change(self, listener):
+        def update(*dummy):
+            listener(self._var.get())
+            self._var.trace('w', update)
+
 
 class IntProp(Prop):
     def __init__(self, initialValue=0, callback=None):
