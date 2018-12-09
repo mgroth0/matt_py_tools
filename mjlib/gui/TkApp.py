@@ -45,7 +45,7 @@ class TkApp(ABC):
     def _animate(self,root):
         try:
             sleep(0.05)
-            for lp in live_plots:
+            for lp in self.live_plots:
                 lp.animate()
             self.animate()
             root.after(50, self._animate(root))
