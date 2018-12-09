@@ -32,14 +32,14 @@ class TkBuilder(ABC):
         s.set(initial)
         return self.layout(s)
 
-    def Entry(self, textvar):
+    def Entry(self, textvar=None,callback=None):
         v = textvar.get()
         e = tk.Entry(self.widget, textvariable=textvar, width=10)
         textvar.set(v)
         return self.layout(e)
 
-    def SpinBox(self, prop, min=1, max=10):
-        s = tk.Spinbox(self.widget, textvariable = prop, from_=min, to_=max, width=5)
+    def SpinBox(self, prop = None,callback=None, min=1, max=10):
+        s = tk.Spinbox(self.widget, textvariable = prop, from_=min, to_=max, width=5,callback=None)
         return self.layout(s)
 
 
