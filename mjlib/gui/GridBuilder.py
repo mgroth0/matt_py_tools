@@ -39,9 +39,9 @@ class GridBuilder(TkBuilder):
 
     def _move(self):
         if not self.hold:
+            self._maxCol = max(self.col, self._maxCol)
+            self._maxRow = max(self.row, self._maxRow)
             if self.orientation is tk.RIGHT:
                 self.col += 1
             else:
                 self.row += 1
-            self._maxCol = max(self.col, self._maxCol)
-            self._maxRow = max(self.row, self._maxRow)
