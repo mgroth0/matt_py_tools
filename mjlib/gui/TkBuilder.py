@@ -38,11 +38,11 @@ class TkBuilder(ABC):
         else:
             textvar = tk.StringVar(self.widget)
         if callback is not None:
-
-            def proto_callback(a,b,c):
-                callback(a)
+            def proto_callback(*dummy):
+                callback(textvar.get())
             textvar.trace(mode='w', callback=proto_callback)
         e = tk.Entry(self.widget, textvariable=textvar, width=10)
+
         if textvar is not None and v is not None:
             textvar.set(v)
         return self.layout(e)
