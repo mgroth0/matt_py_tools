@@ -1,4 +1,4 @@
-from tkinter import IntVar, StringVar, Variable
+from tkinter import Variable
 
 
 class Prop:
@@ -14,18 +14,14 @@ class Prop:
         self._var.set(value)
 
 
-class IntProp:
+class IntProp(Prop):
     def __init__(self, initialValue=0, callback=None):
-        _var = IntVar(value=initialValue)
-        if callback is not None:
-            _var.trace(mode='w', callback=callback)
+        super().__init__(initialValue, callback)
 
 
-class StringProp:
+class StringProp(Prop):
     def __init__(self, initialValue="", callback=None):
-        _var = StringVar(value=initialValue)
-        if callback is not None:
-            _var.trace(mode='w', callback=callback)
+        super().__init__(initialValue, callback)
 
 
 @property
