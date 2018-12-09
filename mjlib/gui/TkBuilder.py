@@ -42,6 +42,13 @@ class TkBuilder(ABC):
         s = tk.Spinbox(self.widget, textvariable = prop, from_=min, to_=max, width=5)
         return self.layout(s)
 
+
+    def canv(self,width=130,height=200,bg="white"):
+        canv = tk.Canvas(self.widget,width=width,height=height,bg=bg)
+        return self.layout(canv)
+        # canv.grid(row=0, column=9, sticky=W + N + S + E, columnspan=2)
+
+
     def _layout(self, widget):
         layout(widget)
         return widget

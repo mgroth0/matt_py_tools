@@ -2,16 +2,24 @@ from tkinter import IntVar, StringVar, Variable
 
 
 class Prop:
-    def __init__(self,initialValue=None,callback=None):
-        _var = Variable(value=initialValue)
+    def __init__(self, initialValue=None, callback=None):
+        self._var = Variable(value=initialValue)
         if callback is not None:
-            _var.trace(mode='w', callback=callback)
+            self._var.trace(mode='w', callback=callback)
+
+    def get(self):
+        return self._var.get()
+
+    def set(self, value):
+        self._var.set(value)
+
 
 class IntProp:
     def __init__(self, initialValue=0, callback=None):
         _var = IntVar(value=initialValue)
         if callback is not None:
             _var.trace(mode='w', callback=callback)
+
 
 class StringProp:
     def __init__(self, initialValue="", callback=None):
