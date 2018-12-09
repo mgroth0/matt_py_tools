@@ -5,7 +5,7 @@ from mjlib.gui.TkBuilder import TkBuilder
 
 class GridBuilder(TkBuilder):
     def __init__(self, widget):
-        TkBuilder.__init__(widget)
+        TkBuilder.__init__(self, widget)
         self.row = 0
         self.col = 0
         self._maxRow = 0
@@ -35,10 +35,5 @@ class GridBuilder(TkBuilder):
             self.col += 1
         else:
             self.row += 1
-        self._maxCol = max(self.col,self._maxCol)
-        self._maxRow = max(self.row,self._maxRow)
-
-
-
-
-
+        self._maxCol = max(self.col, self._maxCol)
+        self._maxRow = max(self.row, self._maxRow)
