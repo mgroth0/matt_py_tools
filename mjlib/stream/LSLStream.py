@@ -1,9 +1,11 @@
+from abc import ABC
+
 from pylsl import resolve_stream, StreamInlet
 
 from mjlib.stream import Stream
 
 
-class LSLStream(Stream):
+class LSLStream(Stream, ABC):
 
     def __init__(self):
         super().__init__()

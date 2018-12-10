@@ -1,10 +1,12 @@
 import select
+from abc import ABC
+
 import socket
 
 from mjlib.stream import Stream
 
 
-class UDPStream(Stream):
+class UDPStream(Stream, ABC):
     def __init__(self, address="127.0.0.1", port=12345):
         super().__init__()
         self.sock = socket.socket(socket.AF_INET,  # Internet
