@@ -1,16 +1,24 @@
 from abc import abstractmethod, ABC
 
+streams = []
 
 class Stream(ABC):
     def __init__(self):
         self._listeners = []
+        self.open = True
+        global streams
+        streams += self
 
     def run(self):
-        while True:
+        print('running ' + str(self))
+        while self.open:
             sample = self._get_sample()
             if sample is None:
                 break
             self._send(sample)
+
+    def close(self):
+        self.open = False
 
     @abstractmethod
     def _get_sample(self):
@@ -18,7 +26,7 @@ class Stream(ABC):
 
     def connect(self, output):
         if output not in self._listeners:
-            self._listeners += output
+            self._listeners.append(output)
 
     def disconnect(self, output):
         self._listeners -= output
@@ -35,3 +43,7 @@ class Stream(ABC):
     def _send(self, sample):
         for l in self._listeners:
             l(sample)
+
+def shutdown():
+    for s in streams:
+        s.close()
