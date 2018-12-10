@@ -2,6 +2,7 @@ from abc import abstractmethod, ABC
 
 streams = []
 
+
 class Stream(ABC):
     def __init__(self):
         self._listeners = []
@@ -39,11 +40,15 @@ class Stream(ABC):
         self.disconnect(other)
         return self
 
-
     def _send(self, sample):
         for l in self._listeners:
             l(sample)
 
-def shutdown():
+    @staticmethod
+    def shutdown():
+        _close_all_streams()
+
+
+def _close_all_streams():
     for s in streams:
         s.close()
