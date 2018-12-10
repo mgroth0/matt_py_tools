@@ -26,11 +26,11 @@ class GridBuilder(TkBuilder):
             self.row += 1
             self.col = 0
 
-    def evenOut(self):
+    def evenOut(self,n=1):
         for i in range(self._maxCol + 1):
-            tk.Grid.columnconfigure(self.widget, i, weight=1)
+            tk.Grid.columnconfigure(self.widget, i, weight=n)
         for i in range(self._maxRow + 1):
-            tk.Grid.rowconfigure(self.widget, i, weight=1)
+            tk.Grid.rowconfigure(self.widget, i, weight=n)
 
     def resetExtraOptions(self):
         self.columnspan = 1
@@ -45,3 +45,18 @@ class GridBuilder(TkBuilder):
                 self.col += 1
             else:
                 self.row += 1
+
+    def save(self):
+        return {
+            'row': self.row,
+            'col': self.col,
+            'orientation': self.orientation,
+            'columnspan': self.columnspan,
+            'rowspan': self.rowspan,
+            'rowspan': self.rowspan,
+            'sticky': self.sticky,
+        }
+
+    def load(self, save):
+        for key, value in save.items():
+            self.__setattr__(key, value)

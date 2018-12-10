@@ -7,6 +7,7 @@ from time import sleep
 class TkApp(ABC):
 
     def __init__(self, root, topmost=False):
+
         root.update()
 
         if topmost:
@@ -15,10 +16,13 @@ class TkApp(ABC):
         root.wm_title(self.__class__.__name__)
 
         def on_closing():
+            print('closing ' + str(self))
             self.on_quit()
             root.destroy()
             sys.exit(0)
+
         root.protocol("WM_DELETE_WINDOW", on_closing)
+        root.createcommand('exit', on_closing)
 
         self.live_plots = []
 
@@ -38,13 +42,12 @@ class TkApp(ABC):
     def animate(self):
         pass
 
-    def _animate(self,root):
+    def _animate(self, root):
         try:
-            sleep(0.05)
             for lp in self.live_plots:
                 lp.animate()
             self.animate()
-            root.after(50, self._animate,root)
+            root.after(1, self._animate, root)
         except KeyboardInterrupt as e:
             print('exiting from KeyboardInterrupt')
             sys.exit(0)
