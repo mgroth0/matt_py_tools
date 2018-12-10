@@ -8,7 +8,7 @@ class Stream(ABC):
         self._listeners = []
         self.open = True
         global streams
-        streams += self
+        streams.append(self)
 
     def run(self):
         print('running ' + str(self))
